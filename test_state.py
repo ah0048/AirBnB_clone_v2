@@ -15,7 +15,7 @@ class TestState(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Set up for the test"""
-        cls.engine = create_engine('mysql+mysqldb://root:root@localhost/hbnb_test_db')
+        cls.engine = create_engine('mysql+mysqldb://hbnb_dev:hbnb_dev_pwd@localhost/hbnb_test_db')
         Session = sessionmaker(bind=cls.engine)
         cls.session = Session()
 

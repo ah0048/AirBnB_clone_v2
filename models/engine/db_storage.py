@@ -34,8 +34,8 @@ class DBStorage:
     def all(self, cls=None):
         '''query on the current database session for a class'''
 
-        objects = dict()
-        classes = [User, State, City, Amenity, Place, Review]
+        objects = {}
+        classes = [State, City]
         if cls is not None:
             query = self.__session.query(cls).all()
             for obj in query:
