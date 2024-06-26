@@ -7,6 +7,7 @@ from sqlalchemy import Column, String, ForeignKey, Integer, Float, Table
 from sqlalchemy.orm import relationship
 import os
 
+
 class Place(BaseModel, Base):
     """ A place to stay """
     __tablename__ = 'places'
@@ -23,22 +24,31 @@ class Place(BaseModel, Base):
     amenity_ids = []
     if os.getenv('HBNB_TYPE_STORAGE') == "db":
         place_amenity = Table('place_amenity', Base.metadata,
-                            Column('place_id', String(60), ForeignKey('places.id'), primary_key=True, nullable=False),
-                            Column('amenity_id', String(60), ForeignKey('amenities.id'), primary_key=True, nullable=False))
+                              Column('place_id',
+                                     String(60),
+                                     ForeignKey('places.id'),
+                                     primary_key=True,
+                                     nullable=False),
+                              Column('amenity_id',
+                                     String(60),
+                                     ForeignKey('amenities.id'),
+                                     primary_key=True,
+                                     nullable=False))
     if os.getenv('HBNB_TYPE_STORAGE') == "db":
         reviews = relationship('Review', backref='place', cascade='delete')
-        amenities = relationship('Amenity', secondary=place_amenity, viewonly=False)
+        amenities = relationship('Amenity',
+                                 secondary=place_amenity, viewonly=False)
     else:
         @property
         def reviews(self):
-            '''returns the list of Review instances with place_id equals to the current Place.id'''
+            '''returns the list of Review instances'''
             from models import storage
             reviews_list = []
             for review in storage(Review).all().values():
                 if review.place_id == self.id:
                     reviews_list.append(review)
             return reviews_list
-        
+
         @property
         def amenities(self):
             '''returns the list of amenities instances'''
@@ -48,7 +58,7 @@ class Place(BaseModel, Base):
                 if amenity.id in self.amenity_ids:
                     amentiies_list.append(amenity)
             return amentiies_list
-        
+
         @amenities.setter
         def amenities(self, value):
             if isinstance(value, Amenity):

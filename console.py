@@ -118,10 +118,8 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        
         arg = args.split(" ")
         class_name = arg[0]
-        
         if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
@@ -140,9 +138,6 @@ class HBNBCommand(cmd.Cmd):
                 else:
                     value = value.replace("_", " ")
                 kwargs[key] = value
-
-        # Set default values for id, created_at, and updated_at
-
 
         # Create new instance and save to storage
         new_instance = new_class(**kwargs)
@@ -343,6 +338,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()

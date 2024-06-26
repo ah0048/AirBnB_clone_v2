@@ -3,6 +3,7 @@
 import unittest
 from models.base_model import BaseModel
 from models.place import Place
+from models.state import State
 from models import storage
 import os
 from console import HBNBCommand
@@ -26,8 +27,8 @@ class test_fileStorage(unittest.TestCase):
         """ Remove storage file at end of tests """
         try:
             os.remove('file.json')
-        except:
-            pass
+        except Exception as e:
+            raise RuntimeError(f"Failed to remove 'file.json': {e}")
 
     def test_obj_list_empty(self):
         """ __objects is initially empty """
@@ -45,6 +46,36 @@ class test_fileStorage(unittest.TestCase):
         new = BaseModel()
         temp = storage.all()
         self.assertIsInstance(temp, dict)
+
+    def test_all_with_class(self):
+        """ __objects is properly returned filtered by class """
+        new_state = State(name="California")
+        new_place = Place(name="My_little_house")
+        storage.new(new_state)
+        storage.new(new_place)
+        storage.save()
+        states = storage.all(State)
+        places = storage.all(Place)
+        self.assertIn(new_state, states.values())
+        self.assertNotIn(new_place, states.values())
+        self.assertIn(new_place, places.values())
+        self.assertNotIn(new_state, places.values())
+
+    def test_delete(self):
+        """ Delete object from __objects if it's inside """
+        new = BaseModel()
+        storage.new(new)
+        storage.save()
+        self.assertIn(new, storage.all().values())
+        storage.delete(new)
+        storage.save()
+        self.assertNotIn(new, storage.all().values())
+
+    def test_delete_none(self):
+        """ Test delete with obj=None does nothing """
+        initial_count = len(storage.all())
+        storage.delete(None)
+        self.assertEqual(len(storage.all()), initial_count)
 
     def test_base_model_instantiation(self):
         """ File is not created on BaseModel save """
@@ -117,7 +148,11 @@ class test_fileStorage(unittest.TestCase):
         """ Test create command with parameters """
         # Capture the output of the command
         with StringIO() as buf, redirect_stdout(buf):
-            self.console.onecmd('create Place name="My_little_house" number_rooms=4 number_bathrooms=2 max_guest=10 price_by_night=300 latitude=37.773972 longitude=-122.431297')
+            self.console.onecmd('create Place name="My_little_house"\
+                                 number_rooms=4 number_bathrooms=2\
+                                 max_guest=10\
+                                 price_by_night=300\
+                                 latitude=37.773972 longitude=-122.431297')
             output = buf.getvalue().strip()
 
         # Ensure an ID is printed (ID of the created Place)
@@ -137,7 +172,8 @@ class test_fileStorage(unittest.TestCase):
         """ Test create command with invalid parameters """
         # Capture the output of the command
         with StringIO() as buf, redirect_stdout(buf):
-            self.console.onecmd('create Place name="My_little_house" invalid_param=some_value')
+            self.console.onecmd('create Place name="My_little_house"\
+                                 invalid_param=some_value')
             output = buf.getvalue().strip()
 
         # Ensure an ID is printed (ID of the created Place)
