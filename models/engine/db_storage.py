@@ -35,7 +35,7 @@ class DBStorage:
         '''query on the current database session for a class'''
 
         objects = {}
-        classes = [State, City, User]
+        classes = [State, City, User, Place]
         if cls is not None:
             query = self.__session.query(cls).all()
             for obj in query:
