@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 '''New engine to be linked with my database'''
-from models.base_model import Base, BaseModel
+from models.base_model import Base
 from models.state import State
 from models.city import City
 from models.user import User
@@ -35,7 +35,7 @@ class DBStorage:
         '''query on the current database session for a class'''
 
         objects = {}
-        classes = [State, City, User, Place, Review]
+        classes = [State, City, User, Place, Review, Amenity]
         if cls is not None:
             query = self.__session.query(cls).all()
             for obj in query:
