@@ -10,6 +10,7 @@ import os
 
 class Place(BaseModel, Base):
     """ A place to stay """
+
     __tablename__ = 'places'
     city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
     user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
