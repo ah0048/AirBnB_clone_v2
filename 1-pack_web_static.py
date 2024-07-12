@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-'''Fabric script that generates a .tgz archive from the contents of the web_static'''
+'''Fabric script that generates a .tgz archive of the web_static'''
 from fabric import tasks
 from fabric.api import *
 from datetime import datetime
