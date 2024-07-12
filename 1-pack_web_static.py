@@ -12,7 +12,7 @@ def do_pack():
     time = datetime.now().strftime('%Y%m%d%H%M%S')
     archive_name = f'{dir_to_archive}_{time}.tgz'
     try:
-        local(f'mkdir -p {directory}')
+        local(f'mkdir {directory}')
         local(f'tar czf {directory}/{archive_name} {dir_to_archive}')
         path = f'{directory}/{archive_name}'
         return path
