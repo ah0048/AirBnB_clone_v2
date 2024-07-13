@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-'''Fabric script that distributes an archive to your web servers'''
+'''Fabric script that creates and distributes an archive to your web servers'''
 from fabric.api import *
 import os
 from datetime import datetime
@@ -48,3 +48,13 @@ def do_deploy(archive_path):
 
     except Exception:
         return False
+
+
+@task
+def deploy():
+    '''function to pack & deploy'''
+    archive_path = do_pack()
+    if not os.path.exists(archive_path):
+        return False
+    result = do_deploy(archive_path)
+    return result

@@ -13,7 +13,7 @@ def do_pack():
     archive_name = f'{dir_to_archive}_{time}.tgz'
     try:
         local(f'mkdir -p {directory}')
-        local(f'tar czf {directory}/{archive_name} {dir_to_archive}')
+        local(f'tar cvzf {directory}/{archive_name} {dir_to_archive}')
         path = f'{directory}/{archive_name}'
         return path
     except Exception:
