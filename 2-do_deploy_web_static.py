@@ -8,7 +8,6 @@ from datetime import datetime
 env.hosts = ['100.26.53.100', '34.232.72.27']
 
 
-
 @task
 def do_pack():
     '''function to archive'''
