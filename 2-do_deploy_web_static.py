@@ -1,30 +1,50 @@
 #!/usr/bin/python3
-"""
-Fabric script based on the file 1-pack_web_static.py that distributes an
-archive to the web servers
-"""
+'''Fabric script that distributes an archive to your web servers'''
+from fabric.api import *
+import os
+from datetime import datetime
 
-from fabric.api import put, run, env
-from os.path import exists
+
 env.hosts = ['100.26.53.100', '34.232.72.27']
+env.user = 'ubuntu'
+env.key_filename = '~/.ssh/school'
 
 
+@task
+def do_pack():
+    '''function to archive'''
+    directory = 'versions'
+    dir_to_archive = 'web_static'
+    time = datetime.now().strftime('%Y%m%d%H%M%S')
+    archive_name = f'{dir_to_archive}_{time}.tgz'
+    try:
+        local(f'mkdir -p {directory}')
+        local(f'tar czf {directory}/{archive_name} {dir_to_archive}')
+        path = f'{directory}/{archive_name}'
+        return path
+    except Exception:
+        return None
+
+
+@task
 def do_deploy(archive_path):
-    """distributes an archive to the web servers"""
-    if exists(archive_path) is False:
+    '''function to deploy'''
+    if not os.path.exists(archive_path):
         return False
     try:
-        file_n = archive_path.split("/")[-1]
-        no_ext = file_n.split(".")[0]
-        path = "/data/web_static/releases/"
         put(archive_path, '/tmp/')
-        run('mkdir -p {}{}/'.format(path, no_ext))
-        run('tar -xzf /tmp/{} -C {}{}/'.format(file_n, path, no_ext))
-        run('rm /tmp/{}'.format(file_n))
-        run('mv {0}{1}/web_static/* {0}{1}/'.format(path, no_ext))
-        run('rm -rf {}{}/web_static'.format(path, no_ext))
-        run('rm -rf /data/web_static/current')
-        run('ln -s {}{}/ /data/web_static/current'.format(path, no_ext))
+        archive_name = os.path.basename(archive_path)
+        exctraction_name = archive_name.split('.')[0]
+        destination = f'/data/web_static/releases/{exctraction_name}'
+        run(f'mkdir -p {destination}')
+        run(f'sudo tar -xzf /tmp/{archive_name} -C {destination}')
+        run(f'sudo rm /tmp/{archive_name}')
+        run(f'sudo mv {destination}/web_static/* {destination}')
+        run(f'sudo rm -rf {destination}/web_static')
+        run('sudo rm -rf /data/web_static/current')
+        run(f'sudo ln -s {destination} /data/web_static/current')
+        print('New version deployed!')
         return True
-    except:
+
+    except Exception:
         return False
