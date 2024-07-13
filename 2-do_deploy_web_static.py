@@ -35,14 +35,15 @@ def do_deploy(archive_path):
         put(archive_path, '/tmp/')
         archive_name = os.path.basename(archive_path)
         exctraction_name = archive_name.split('.')[0]
-        run(f'sudo tar -xzf /tmp/{archive_name} -C /data/web_static/releases')
-        run('cd /data/web_static/releases')
-        old_path = '/data/web_static/releases/web_static'
-        new_path = f'/data/web_static/releases/{exctraction_name}'
-        run(f'sudo mv {old_path} {new_path}')
-        run(f'sudo rm -r /tmp/{archive_name}')
-        run('sudo rm /data/web_static/current')
-        run(f'sudo ln -s {new_path} /data/web_static/current')
+        destination = f'/data/web_static/releases/{exctraction_name}'
+        run(f'mkdir -p {destination}')
+        run(f'sudo tar -xzf /tmp/{archive_name} -C {destination}')
+        run(f'sudo rm /tmp/{archive_name}')
+        run(f'sudo mv {destination}/web_static/* {destination}')
+        run(f'sudo rm -rf {destination}/web_static')
+        run('sudo rm -rf /data/web_static/current')
+        run(f'sudo ln -s {destination} /data/web_static/current')
+        print('New version deployed!')
         return True
 
     except Exception:
