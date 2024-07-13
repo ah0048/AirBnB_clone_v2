@@ -5,7 +5,8 @@ import os
 
 
 env.hosts = ['100.26.53.100', '34.232.72.27']
-
+env.user = 'ubuntu'
+env.key_filename = '~/.ssh/school'
 
 
 def do_deploy(archive_path):
@@ -19,7 +20,7 @@ def do_deploy(archive_path):
             exctraction_name = archive_name.split('.')[0]
             run(f'sudo tar -xzf /tmp/{archive_name} -C /data/web_static/releases')
             run('cd /data/web_static/releases')
-            run(f'mv /data/web_static/releases/web_static /data/web_static/releases/{exctraction_name}')
+            run(f'sudo mv /data/web_static/releases/web_static /data/web_static/releases/{exctraction_name}')
             run(f'sudo rm -r /tmp/{archive_name}')
             run('sudo rm /data/web_static/current')
             run(f'sudo ln -s /data/web_static/releases/{exctraction_name} /data/web_static/current')
