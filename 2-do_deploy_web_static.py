@@ -31,6 +31,12 @@ def do_deploy(archive_path):
     '''function to deploy'''
     if not os.path.exists(archive_path):
         return False
+    directory = 'versions'
+    dir_to_archive = 'web_static'
+    time = datetime.now().strftime('%Y%m%d%H%M%S')
+    archive_name = f'{dir_to_archive}_{time}.tgz'
+    local(f'mkdir -p {directory}')
+    local(f'tar czf {directory}/{archive_name} {dir_to_archive}')
     try:
         put(archive_path, '/tmp/')
         archive_name = os.path.basename(archive_path)
