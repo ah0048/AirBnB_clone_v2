@@ -4,6 +4,7 @@
 	flex-wrap: wrap;
 	margin: 45px auto;
 	text-align: center;
+	position: relative;
 }
 
 article {
