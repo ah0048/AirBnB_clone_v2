@@ -8,18 +8,18 @@ from models.state import State
 app = Flask(__name__)
 
 
-@app.teardown_appcontext
-def close_storage(exception):
-    '''closes current session'''
-    storage.close()
-
-
 @app.route('/states_list', strict_slashes=False)
 def state_list():
     '''sends a page of states list'''
     states_list = storage.all(State).values()
     states_list = sorted(states_list, key=lambda state: state.name)
     return render_template('7-states_list.html', states_list=states_list)
+
+
+@app.teardown_appcontext
+def teardown_db(exception):
+    '''closes current session'''
+    storage.close()
 
 
 
