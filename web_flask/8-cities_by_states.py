@@ -19,6 +19,7 @@ def teardown_db(exception):
 def cities_list():
     '''sends a page of states and cities list'''
     states_list = storage.all(State).values()
+    states_list = sorted(states_list, key=lambda state: state.name)
     return render_template('8-cities_by_states.html', states_list=states_list)
 
 
