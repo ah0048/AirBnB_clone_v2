@@ -3,6 +3,7 @@
 from flask import Flask, render_template
 from models import storage
 from models.state import State
+from models.amenity import Amenity
 
 
 app = Flask(__name__)
@@ -15,23 +16,12 @@ def teardown_db(exception):
         storage.close()
 
 
-@app.route('/states', strict_slashes=False)
-@app.route('/states/<id>', strict_slashes=False)
-def states(id=None):
-    '''sends a page of states list'''
+@app.route('/hbnb_filters', strict_slashes=False)
+def hbnb():
+    '''sends a page of airbnb clone'''
     states = storage.all(State).values()
     states = sorted(states, key=lambda state: state.name)
-    state = None
-    if id is None:
-        return render_template('9-states.html', states=states, state=None)
-    else:
-        for state_req in states:
-            if state_req.id == id:
-                state = state_req
-        if state is None:
-            return render_template('9-states.html', states=None, state=None)
-        else:
-            return render_template('9-states.html', states=None, state=state)
+    amenities = storage.all(State).values()
 
 
 if __name__ == '__main__':
