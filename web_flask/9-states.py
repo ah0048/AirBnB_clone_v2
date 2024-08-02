@@ -20,6 +20,7 @@ def teardown_db(exception):
 def states(id=None):
     '''sends a page of states list'''
     states = storage.all(State).values()
+    states = sorted(states, key=lambda state: state.name)
     state = None
     if id is None:
         return render_template('9-states.html', states=states, state=None)

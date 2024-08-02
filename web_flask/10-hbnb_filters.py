@@ -21,7 +21,9 @@ def hbnb():
     '''sends a page of airbnb clone'''
     states = storage.all(State).values()
     states = sorted(states, key=lambda state: state.name)
-    amenities = storage.all(State).values()
+    amenities = storage.all(Amenity).values()
+    amenities = sorted(amenities, key=lambda amenity: amenity.name)
+    return render_template('10-hbnb_filters.html', states=states, amenities=amenities)
 
 
 if __name__ == '__main__':
