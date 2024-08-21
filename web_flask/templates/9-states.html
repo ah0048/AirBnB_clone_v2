@@ -4,14 +4,15 @@
         <TITLE>HBNB</TITLE>
     </HEAD>
     <BODY>
-        {% if states %}
+        {% if not state %}
         <H1>States</H1>
         <UL>
             {% for state in states|sort(attribute='name') %}
                 <LI>{{ state.id|e }}: <B>{{ state.name|e }}</B></LI>
             {% endfor %}
         </UL>
-        {% elif state %}
+        {% endif %}
+        {% if state %}
         <H1>State: {{ state.name }}</H1>
         <H3>Cities:</H3>
             <UL>
